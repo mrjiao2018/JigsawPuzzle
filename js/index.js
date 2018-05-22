@@ -9,6 +9,11 @@ var boxNumber;
 var boxPosition;
 
 /**
+ * 声明全局变量moveCount，用于记录步数
+ */
+var moveCount = 0;
+
+/**
  * 下拉框绑定函数，设置boxNumber并生成游戏界面
  */
 function start() {
@@ -17,11 +22,6 @@ function start() {
         //初始化BoxNumber
         var selectText = $("select option:selected").text();
         boxNumber = parseInt(selectText);
-        //初始化BoxPosition数组
-        boxPosition = new Array(boxNumber);
-        for(var i = 0; i < boxNumber; ++i) {
-            boxPosition[i] = i;
-        }
         //生成宫格
         generate();
     });
@@ -33,8 +33,12 @@ function start() {
  */
 function generate() {
     remove();
+    generateBoxPositionArr();
     generateInOrder();
-    arrangeAtRandom();
+    setTimeout(function(){
+        arrangeAtRandom();
+        moveWhenClick();
+    }, 100);
 }
 
 /**
@@ -43,6 +47,17 @@ function generate() {
 function remove() {
     var $container = $("#container");
     $container.empty();
+}
+
+/**
+ * 初始化boxPosition数组
+ */
+function generateBoxPositionArr() {
+    //初始化BoxPosition数组
+    boxPosition = new Array(boxNumber);
+    for(var i = 0; i < boxNumber; ++i) {
+        boxPosition[i] = i;
+    }
 }
 
 /**
@@ -87,14 +102,42 @@ function getSideLength() {
  * 将宫格随机打乱
  */
 function arrangeAtRandom() {
-
+    for(var i = 0; i < 200; ++i) {
+        //获取当前可移动的box
+        var $specialBox = $("#specialBox");
+        var specialBoxIndexInHtml = $(".box").index($specialBox);
+        var specialBoxIndexInArr = boxPosition[specialBoxIndexInHtml];
+        var surroundBoxIndex = new Array(4);
+        var sqrt = parseInt(Math.sqrt(boxNumber));
+        surroundBoxIndex[0] = (specialBoxIndexInArr >= sqrt) ? (specialBoxIndexInArr - sqrt) : (-1);          //具体解释见getMoveDirection()函数
+        surroundBoxIndex[1] = ((specialBoxIndexInArr + 1) % sqrt != 0) ? (specialBoxIndexInArr + 1) : (-1);
+        surroundBoxIndex[2] = (specialBoxIndexInArr <= (boxNumber - sqrt)) ? (specialBoxIndexInArr + sqrt) : (-1);
+        surroundBoxIndex[3] = (specialBoxIndexInArr % sqrt != 0) ? (specialBoxIndexInArr - 1) : (-1);
+        //随机选取一个移动
+        var randomIndexInArr = -1, randomIndexInHtml;
+        while (randomIndexInArr == -1) {
+            var random = parseInt(Math.random() * surroundBoxIndex.length);
+            randomIndexInArr = surroundBoxIndex[random];
+        }
+        for (var j = 0; j < boxNumber; ++j)
+            if(randomIndexInArr == boxPosition[j])
+                randomIndexInHtml = j;
+        move($(".box").eq(randomIndexInHtml), false);
+    }
 }
 
 /**
  * 在用户的点击下移动box
  */
 function moveWhenClick() {
-
+    var $box = $(".box");
+    for (var i = 0; i < boxNumber; ++i) {
+        var moveBox = $box[i];
+        //触发点击事件
+        moveBox.onclick = function () {
+            move($(this), true);
+        }
+    }
 }
 
 /**
@@ -103,12 +146,12 @@ function moveWhenClick() {
  * @param $moveBox 要移动的box对象; isClicked 是否是用户点击
  */
 function move($moveBox, isClicked) {
-    var moveDirectionNumber = getMoveDirection($moveBox);       //获得移动方向
-    if (moveDirectionNumber) {                              //根据移动方向的值检查是否满足移动条件
-        var specialBox = $("#specialBox").get(0);           //获取特殊占位box
-        var top = parseInt($moveBox.get(0).style.top);                 //获取当前点击的box的相关属性
-        var left = parseInt($moveBox.get(0).style.left);
-        var sideLength = parseInt($moveBox.get(0).style.width);
+    var moveDirectionNumber = getMoveDirection($moveBox);               //获得移动方向
+    if (moveDirectionNumber) {                                          //根据移动方向的值检查是否满足移动条件
+        var specialBox = $("#specialBox").get(0);                       //获取特殊占位box
+        var top = parseFloat($moveBox.get(0).style.top);                  //获取当前点击的box的相关属性
+        var left = parseFloat($moveBox.get(0).style.left);
+        var sideLength = parseFloat($moveBox.get(0).style.width);
 
         //根据不同的移动方向来移动元素
         if (moveDirectionNumber == 1)
@@ -123,13 +166,20 @@ function move($moveBox, isClicked) {
         $moveBox.get(0).style.left = left + "%";
 
         //在数组中将两个box交换位置
+        var boxIndexInHtml = $(".box").index($moveBox);
+        var boxIndexInArr = boxPosition[boxIndexInHtml];
+        var specialBoxIndexInHtml = $(".box").index($("#specialBox"));
+        var specialBoxIndexInArr = boxPosition[specialBoxIndexInHtml];
+        boxPosition[boxIndexInHtml] = specialBoxIndexInArr;
+        boxPosition[specialBoxIndexInHtml] = boxIndexInArr;
 
-        if (isClicked) {                 //判断是否是用户点击
+        //对用户点击进行处理
+        if (isClicked) {                 
             //记录移动步数
             ++moveCount;
-            showSteps(moveCount);
+            showSteps();
             //检查最终结果
-            check(moveCount);
+            check();
         }
     }
 }
@@ -141,12 +191,26 @@ function move($moveBox, isClicked) {
  * @return 0，1，2，3，4 分别代表不能移动、上、右、下、左
  */
 function getMoveDirection($moveBox) {
-    //获取到指定moveBox的索引
-
+    //获取到指定moveBox在html中和在数组中的位置索引
+    var boxIndexInHtml = $(".box").index($moveBox);
+    var boxIndexInArr = boxPosition[boxIndexInHtml];
     //获取指定movebox上右下左box中的数字
-
+    var surroundBoxIndex = new Array(4);
+    var sqrt = parseInt(Math.sqrt(boxNumber));
+    surroundBoxIndex[0] = (boxIndexInArr >= sqrt) ? (boxIndexInArr - sqrt) : (-1);              //若moveBox在第一行，则不可以向上移动
+    surroundBoxIndex[1] = ((boxIndexInArr + 1) % sqrt != 0) ? (boxIndexInArr + 1) : (-1);       //若moveBox在最后一列，则不可以向右移动
+    surroundBoxIndex[2] = (boxIndexInArr <= (boxNumber - sqrt)) ? (boxIndexInArr + sqrt) : (-1);    //若moveBox在最后一行，则不可以向下移动
+    surroundBoxIndex[3] = (boxIndexInArr % sqrt != 0) ? (boxIndexInArr - 1) : (-1);             //若moveBox在第一列，则不可以向左移动
     //将surroundBoxIndex中的值与specialBox比较，若相等则代表当前$moveBox可以移动，返回移动方向
-
+    for (var i = 0; i < 4; ++i) {
+        if (surroundBoxIndex[i] != -1) {                                //判断surroundBoxIndex是否越界
+            var specialBoxIndexInHtml = $(".box").index($("#specialBox"));
+            var specialBoxIndexInArr = boxPosition[specialBoxIndexInHtml];
+            if (surroundBoxIndex[i] == specialBoxIndexInArr) {          //判断周围box是否为specialBox
+                return i + 1;
+            }
+        }
+    }
     return 0;
 }
 
@@ -158,14 +222,26 @@ function check() {
         if(boxPosition[i] != i)
             return false;
     }
-    return true;
+    setTimeout(function(){
+        alert("Congradulation！！！You succeed!!! Your steps is " + moveCount);
+        moveCount = 0;
+    }, 200);
 }
 
 /**
- * 展示移动函数
+ * alert重置函数https://blog.csdn.net/zyy_0725/article/details/79231892
+ */
+// window.alert = alert;
+// function alert(data) {
+
+// }
+
+/**
+ * 展示移动步数函数
  */
 function showSteps() {
-
+    var moveCountSpan = $("#showSteps span");
+    moveCountSpan.text(moveCount);
 }
 
 /**

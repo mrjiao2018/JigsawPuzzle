@@ -54,7 +54,7 @@ select{
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    padding-left: 60px;
+    padding-left: 40px;
 }
 
 #selectDiv:after{
@@ -87,10 +87,18 @@ select{
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: 0.2 s;
+    transition: 0.2s;
     border-radius: 0.5em;
 }
 
 #specialBox {
     visibility: hidden;
+}
+
+#showSteps {
+    background-color: #f3f3f3;
+    border-radius: 10px;
+    margin-top:20px;
+    height: 60px;
+    width: 600px;
 }
