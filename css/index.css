@@ -1,0 +1,96 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    flex-direction: column;
+}
+
+.flowDisplay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#navBar {
+    background-color: #f3f3f3;
+    border-radius: 10px;
+    margin-top:20px;
+}
+
+#userIcon {
+    height: 40px;
+    width: 40px;
+    margin-left: 30px;
+}
+
+#title{
+    height: 100%;
+    font-size: 1.25em;
+    margin:20px 120px 20px 160px;
+}
+
+#gamePattern {
+    color: #aaa;
+}
+
+#selectDiv {
+    margin-right: 40px;
+    width: 140px;
+    height: 30px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ccc;
+    position: relative;
+}
+
+select{
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    font-size: 1em;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-left: 60px;
+}
+
+#selectDiv:after{
+    content: "";
+    width: 14px;
+    height: 8px;
+    background: url(../pic/select.png) no-repeat center;
+    background-size: 35px 35px;
+    position: absolute;
+    right: 15px;
+    top: 40%;
+    pointer-events: none;
+}
+
+#container {
+    background-color: #f3f3f3;
+    border-radius: 10px;
+    margin-top:20px;
+    width: 600px;
+    height: 600px;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.box {
+    background-color: #ddd6c1;
+    font-size: 2.5em;
+    position: absolute;
+    color: #2d92af;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2 s;
+    border-radius: 0.5em;
+}
+
+#specialBox {
+    visibility: hidden;
+}
