@@ -20,10 +20,10 @@ function start() {
     var $select = $("select");
     $select.change(function() {
         //初始化BoxNumber
-        var selectText = $("select option:selected").text();
-        boxNumber = parseInt(selectText);
+        var boxNumber = parseInt($select.eq(0).find("option:selected").val());
+        var gameDifficulty = $select.eq(1).find("option:selected").val();
         //生成宫格
-        generate();
+        generate(gameDifficulty);
     });
     
 }
@@ -31,12 +31,12 @@ function start() {
 /**
  * 生成游戏界面
  */
-function generate() {
+function generate(gameDifficulty) {
     remove();
     generateBoxPositionArr();
     generateInOrder();
     setTimeout(function(){
-        arrangeAtRandom();
+        arrangeAtRandom(gameDifficulty);
         moveWhenClick();
     }, 100);
 }
@@ -101,8 +101,15 @@ function getSideLength() {
 /**
  * 将宫格随机打乱
  */
-function arrangeAtRandom() {
-    for(var i = 0; i < 200; ++i) {
+function arrangeAtRandom(gameDifficulty) {
+    var difficulty;
+    if(gameDifficulty == "easy")
+        difficulty = 20;
+    else if(gameDifficulty == "simple")
+        difficulty = 50;
+    else if(gameDifficulty == "hard")
+        difficulty = 200;
+    for(var i = 0; i < difficulty; ++i) {
         //获取当前可移动的box
         var $specialBox = $("#specialBox");
         var specialBoxIndexInHtml = $(".box").index($specialBox);
@@ -248,9 +255,10 @@ function showSteps() {
  * 测试函数
  */
 function runTest() {
-    //首次加载时，默认生成九宫格
+    //首次加载时，默认生成九宫格简单难度
     boxNumber = 9;
-    generate();
+    var gameDifficulty = "easy";
+    generate(gameDifficulty);
     //用户改变select值
     start();
 }
