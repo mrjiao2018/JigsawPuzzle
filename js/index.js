@@ -20,7 +20,7 @@ function start() {
     var $select = $("select");
     $select.change(function() {
         //初始化BoxNumber
-        var boxNumber = parseInt($select.eq(0).find("option:selected").val());
+        boxNumber = parseInt($select.eq(0).find("option:selected").val());
         var gameDifficulty = $select.eq(1).find("option:selected").val();
         //生成宫格
         generate(gameDifficulty);
