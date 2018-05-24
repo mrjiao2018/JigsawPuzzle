@@ -1,7 +1,7 @@
 /**
- * 声明全局变量boxNumber, 用于控制生成几宫格，此后基本每个函数都要用到boxNumber，因此声明为全局变量
+ * 声明全局变量boxNumber, 用于控制生成几宫格，gameDifficulty游戏难度，gamePattern游戏模式
  */
-var boxNumber;
+var boxNumber = 9, gameDifficulty = "easy", gamePattern = "number";
 
 /**
  * 声明全局变量boxPosition，为数组，用于记录每个Box的位置
@@ -21,22 +21,23 @@ function start() {
     $select.change(function() {
         //初始化BoxNumber
         boxNumber = parseInt($select.eq(0).find("option:selected").val());
-        var gameDifficulty = $select.eq(1).find("option:selected").val();
+        gameDifficulty = $select.eq(1).find("option:selected").val();
         //生成宫格
-        generate(gameDifficulty);
+        generate();
     });
     
 }
 
 /**
  * 生成游戏界面
+ * 
  */
-function generate(gameDifficulty) {
+function generate() {
     remove();
     generateBoxPositionArr();
     generateInOrder();
     setTimeout(function(){
-        arrangeAtRandom(gameDifficulty);
+        arrangeAtRandom();
         moveWhenClick();
     }, 100);
 }
@@ -81,6 +82,8 @@ function generateInOrder() {
 
 /**
  * 获取每个box的top值和left值
+ * 
+ * @return [top, left] 每个box的top值和left值
  */
 function getTopAndLeft(x, y, sideLength) {
     var top = x * sideLength + 2 * (x + 1);
@@ -90,6 +93,8 @@ function getTopAndLeft(x, y, sideLength) {
 
 /**
  * 根据boxNumber获取每个宫格的边长
+ * 
+ * @return sideLength 边长
  */
 function getSideLength() {
     var sqrt = parseInt(Math.sqrt(boxNumber));
@@ -100,11 +105,12 @@ function getSideLength() {
 
 /**
  * 将宫格随机打乱
+ * 
  */
-function arrangeAtRandom(gameDifficulty) {
+function arrangeAtRandom() {
     var difficulty;
     if(gameDifficulty == "easy")
-        difficulty = 20;
+        difficulty = 10;
     else if(gameDifficulty == "simple")
         difficulty = 50;
     else if(gameDifficulty == "hard")
@@ -229,19 +235,47 @@ function check() {
         if(boxPosition[i] != i)
             return false;
     }
+    playVoice("media/1.mp3");
     setTimeout(function(){
         alert("Congradulation！！！You succeed!!! Your steps is " + moveCount);
         moveCount = 0;
     }, 200);
 }
 
-/**
- * alert重置函数https://blog.csdn.net/zyy_0725/article/details/79231892
- */
-// window.alert = alert;
-// function alert(data) {
+function playVoice(file) {
+    $('#voice').html('<audio controls="controls" id="audio_player" style="display:none;"> <source src="' + file + '" > </audio><embed id="MPlayer_Alert" src="' + file + '" loop="false" width="0px" height="0px" /></embed>');
+}
 
-// }
+/**
+ * 重置函数
+ */
+function reset() {
+    var $resetButton = $("#reset");
+    var $randomResetBotton = $("#randomReset");
+    $resetButton.click(function() {
+        //todo
+        runTest();
+        moveCount = 0;
+        showSteps();
+    });
+    $randomResetBotton.click(function() {
+        var boxNumberArr = [9, 16, 25];
+        var gameDifficultyArr = ["easy", "simple", "hard"];
+        var gamePatternArr = ["number", "img"];
+        var random1, random2, random3;
+        random1 = parseInt(Math.random()*3);
+        random2 = parseInt(Math.random()*3);
+        random3 = parseInt(Math.random()*2);
+        boxNumber = boxNumberArr[random1];
+        gameDifficulty = gameDifficultyArr[random2];
+        gamePattern = gamePatternArr[random3];
+        runTest();
+        moveCount = 0;
+        showSteps();
+        var $select = $("select");
+        //todo
+    });
+}
 
 /**
  * 展示移动步数函数
@@ -256,11 +290,13 @@ function showSteps() {
  */
 function runTest() {
     //首次加载时，默认生成九宫格简单难度
-    boxNumber = 9;
-    var gameDifficulty = "easy";
-    generate(gameDifficulty);
+    generate();
+
     //用户改变select值
     start();
+
+    //用户重置
+    reset();
 }
 
 /**

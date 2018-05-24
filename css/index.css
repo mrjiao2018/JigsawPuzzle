@@ -13,10 +13,17 @@ body {
     align-items: center;
 }
 
-#navBar {
+#head {
     background-color: #f3f3f3;
     border-radius: 10px;
     margin-top:20px;
+    width: 800px;
+}
+
+#navBar {
+    margin-top:20px;
+    height: 50px;
+    width: 100%;
 }
 
 #userIcon {
@@ -31,7 +38,7 @@ body {
     margin:20px 120px 20px 160px;
 }
 
-.gamePattern {
+.selectFont {
     color: #aaa;
 }
 
@@ -84,7 +91,7 @@ select{
     background-color: #ddd6c1;
     font-size: 2.5em;
     position: absolute;
-    color: #2d92af;
+    color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -92,14 +99,38 @@ select{
     border-radius: 0.5em;
 }
 
+.box:hover {
+    color: #2d92af;
+}
+
 #specialBox {
     visibility: hidden;
 }
 
-#showSteps {
+#bottomBar {
     background-color: #f3f3f3;
     border-radius: 10px;
     margin-top:20px;
     height: 60px;
-    width: 600px;
+    width: 800px;
+}
+
+.button {
+    height: 40px;
+    width: 140px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 0.25em;
+    background-color: #ddd6c1;
+    color: white;
+    margin-left: 100px;
+}
+
+.button:hover{
+    color: #2d92af;    
+}
+
+.button:active {
+    background-color: #2d92af;
+    color: white;    
 }

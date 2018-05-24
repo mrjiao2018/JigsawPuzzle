@@ -12,36 +12,54 @@
 </head>
 
 <body class="flowDisplay">
-    <div id="navBar" class="flowDisplay">
-        <div id="icon">
-            <img id="userIcon" src="pic/user.jpg" alt="userIcon">
-        </div>
-        <div id="title">
-            <p>拼图小游戏</p>
-        </div>
+    <div id="head">
         <div class="flowDisplay">
-            <p class="gamePattern">游戏模式：</p>
-            <div class="selectDiv">
-                <select>
-                    <option value="9">9宫格</option>
-                    <option value="16">16宫格</option>
-                    <option value="25">25宫格</option>
-                </select>
+            <div id="icon">
+                <img id="userIcon" src="pic/user.jpg" alt="userIcon">
+            </div>
+            <div id="title">
+                <p>拼图小游戏</p>
             </div>
         </div>
-        <div class="flowDisplay">
-            <p class="gamePattern">游戏难度：</p>
-            <div class="selectDiv">
-                <select>
-                    <option value="easy">简单</option>
-                    <option value="simple">普通</option>
-                    <option value="hard">困难</option>
-                </select>
+        <div id="navBar" class="flowDisplay">
+            <div class="flowDisplay">
+                <p class="selectFont">宫格模式：</p>
+                <div class="selectDiv">
+                    <select>
+                        <option value="9">9宫格</option>
+                        <option value="16">16宫格</option>
+                        <option value="25">25宫格</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flowDisplay">
+                <p class="selectFont">游戏难度：</p>
+                <div class="selectDiv">
+                    <select>
+                        <option value="easy">简单</option>
+                        <option value="simple">普通</option>
+                        <option value="hard">困难</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flowDisplay">
+                <p class="selectFont">游戏模式：</p>
+                <div class="selectDiv">
+                    <select>
+                        <option value="number">数字</option>
+                        <option value="img">图片</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
     <div id="container"></div>
-    <div id="showSteps" class="flowDisplay">当前移动步数为：<span>0</span></div>
+    <div class="flowDisplay" id = "bottomBar">
+        <div id="showSteps" class="flowDisplay">当前移动步数为：<span>0</span></div>
+        <button id="reset" class="button">重置</button>
+        <button id="randomReset" class="button">随机重置</button>
+        <div id="voice"></div>
+    </div>
 </body>
 
 </html>
