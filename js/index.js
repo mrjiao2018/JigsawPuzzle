@@ -16,7 +16,7 @@ var moveCount = 0;
 /**
  * 下拉框绑定函数，设置boxNumber并生成游戏界面
  */
-function start() {
+function selectChange() {
     var $select = $("select");
     $select.change(function() {
         //初始化BoxNumber
@@ -289,11 +289,11 @@ function showSteps() {
  * 测试函数
  */
 function runTest() {
-    //首次加载时，默认生成九宫格简单难度
+    //首次加载时，默认生成数字模式九宫格简单难度
     generate();
 
     //用户改变select值
-    start();
+    selectChange();
 
     //用户重置
     reset();
